@@ -8,10 +8,11 @@ GLMmodel * right_uparm = NULL;
 GLMmodel * right_arm = NULL;
 GLMmodel * right_hand = NULL;
 
-int show[5] = {1,1,1,1,5};
+int show[5] = {1,1,1,1,1};
 int ID = 2; ///設定關節ID
 
 float teapotX = 0, teapotY = 0;
+float angle = 0;
 FILE * fout = NULL;
 FILE * fin = NULL;
 
@@ -39,31 +40,52 @@ void display()
     }
     glPushMatrix();
         glScalef(0.3, 0.3, 0.3);
-        glPushMatrix();
-            glTranslatef(teapotX, teapotY, 0);
+      ///  glPushMatrix();
+       ///     glTranslatef(teapotX, teapotY, 0);
 
             if(ID == 0) glColor3f(1,0,0);
             else glColor3f(1,1,1);
             if(show[0]) glmDraw(head, GLM_MATERIAL);
-        glPopMatrix();
+    ///    glPopMatrix();
 
         if(ID == 1) glColor3f(1,0,0);
         else glColor3f(1,1,1);
         if(show[1]) glmDraw(body, GLM_MATERIAL);
 
-        if(ID == 2) glColor3f(1,0,0);
-        else glColor3f(1,1,1);
-        if(show[2]) glmDraw(right_uparm, GLM_MATERIAL);
+        glPushMatrix();
+            glTranslatef(-1.360000, +0.360000, 0);
+            glRotatef(angle, 0, 0, 1);
+            glTranslatef(1.360000, -0.360000, 0);
 
-        if(ID == 3) glColor3f(1,0,0);
-        else glColor3f(1,1,1);
-        if(show[3]) glmDraw(right_arm, GLM_MATERIAL);
+            if(ID == 2) glColor3f(1,0,0);
+            else glColor3f(1,1,1);
+            if(show[2]) glmDraw(right_uparm, GLM_MATERIAL);
 
-        if(ID == 4) glColor3f(1,0,0);
-        else glColor3f(1,1,1);
-        if(show[4]) glmDraw(right_hand, GLM_MATERIAL);
+            glPushMatrix();
+                glTranslatef(-1.959999, +0.080000, 0);
+                glRotatef(angle, 0, 0, 1);
+                glTranslatef(+1.959999, -0.080000, 0);
+
+                if(ID == 3) glColor3f(1,0,0);
+                else glColor3f(1,1,1);
+                if(show[3]) glmDraw(right_arm, GLM_MATERIAL);
+            glPopMatrix();
+
+            glPushMatrix();
+                glTranslatef(-1.959999, +0.080000, 0);
+                glRotatef(angle, 0, 0, 1);
+                glTranslatef(+1.959999, -0.080000, 0);
+
+                if(ID == 4) glColor3f(1,0,0);
+                else glColor3f(1,1,1);
+                if(show[4]) glmDraw(right_hand, GLM_MATERIAL);
+            glPopMatrix();
+        glPopMatrix();
+
 
     glPopMatrix();
+    glColor3f(0,1,0);
+    glutSolidTeapot(0.02);
     glutSwapBuffers();
 }
 int oldX=0, oldY=0;
@@ -79,6 +101,8 @@ void motion(int x, int y)
 {
     teapotX += (x - oldX)/150.0;
     teapotY -= (y - oldY)/150.0;
+    printf("glTranslatef(%f, %f, 0);\n", teapotX, teapotY);
+    angle += x-oldX;
     oldX = x;
     oldY = y;
     glutPostRedisplay();
