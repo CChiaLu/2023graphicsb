@@ -5,10 +5,8 @@
 #include "glm.h"
 GLMmodel * head = NULL;
 GLMmodel * body = NULL; ///GLMmodel * gundam = NULL;
-GLMmodel * arm1 = NULL, * arm2 = NULL;
-GLMmodel * hand1 = NULL, * hand2 = NULL;
 
-float teapotX = 0, teapotY = 0, angle = 0, angle2 = 0, oldX = 0, oldY = 0;
+float teapotX = 0, teapotY = 0, angle = 0, oldX = 0, oldY = 0;
 int myTexture(char * filename)
 {
     IplImage * img = cvLoadImage(filename); ///OpenCVÅª¹Ï
@@ -32,7 +30,6 @@ void motion(int x, int y) {
     teapotX += (x - oldX) / 150.0 * 10; ///teapotX = (x-150)/150.0;
     teapotY += (oldY - y) / 150.0 * 10; ///teapotY = (150-y)/150.0;
     angle += x - oldX;
-    angle2 += oldY - y;
     oldX = x;
     oldY = y;
     glutPostRedisplay();
@@ -49,16 +46,8 @@ void display() {
             ///glRotatef(angle, 0, 1, 0);
             glmDraw(body, GLM_MATERIAL|GLM_TEXTURE);///glmDraw(gundam, GLM_MATERIAL|GLM_TEXTURE);
 
-            glPushMatrix();///¤â
-                glTranslatef(teapotX, teapotY, 0);
-                glmDraw(arm1, GLM_MATERIAL|GLM_TEXTURE);
-            glPopMatrix();
-
             glPushMatrix();
-                glTranslatef(-0.00, +22.53, 0 );
-                ///glRotatef(angle, 0, 1, 0);
-                ///glRotatef(angle2, 1, 0, 0);
-                glTranslatef( 0.00, -22.53, 0 );///glTranslatef(teapotX, teapotY, 0);
+                glTranslatef(teapotX, teapotY, 0);
                 glmDraw(head, GLM_MATERIAL|GLM_TEXTURE);
             glPopMatrix();
         glPopMatrix();
@@ -74,7 +63,6 @@ int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_DEPTH);
-    glutInitWindowSize(500,500);
     glutCreateWindow("week16");
 
     glutDisplayFunc(display);
@@ -83,11 +71,6 @@ int main(int argc, char** argv)
 
     head = glmReadOBJ("model/head.obj");
     body = glmReadOBJ("model/body.obj"); ///gundam = glmReadOBJ("model/Gundam.obj");
-    arm1 = glmReadOBJ("model/arm1.obj");
-    arm2 = glmReadOBJ("model/arm2.obj");
-    hand1 = glmReadOBJ("model/hand1.obj");
-    hand2 = glmReadOBJ("model/hand2.obj");
-
     myTexture("model/Diffuse.jpg");
     glEnable(GL_DEPTH_TEST);
 
